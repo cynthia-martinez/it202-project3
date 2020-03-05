@@ -1,0 +1,9 @@
+body{
+  overflow: hidden;
+}
+#game{
+  text-align: center;
+}
+#c1{
+  background-color: #368DC5;
+}

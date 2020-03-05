@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="game.css">
+    <meta charset="UTF-8">
+    <title>Dexie</title>    
+  </head>
+
+  <body>
+    <div id = "game">
+      <canvas id = "c1"></canvas>      
+    </div>
+    
+    <script>
+      var c = document.getElementById("c1");
+      var ctx = c.getContext("2d");
+      ctx.canvas.width  = window.innerWidth-100;
+      ctx.canvas.height = window.innerHeight-20;
+      
+      let player  = {x:10, y:c.height/2,w:120,h:50};
+      
+      let colors = ["red", "green"];
+      
+      
+      const drawFilledCircle = (x,y,color,radius) => {
+        ctx.beginPath();
+        ctx.arc(x,y,radius,0, Math.PI*2);
+        ctx.fillStyle = color;
+        ctx.closePath();
+        ctx.fill();
+
+      }
+      
+      /* takes in a circle object and a rectangle object
+      formulas taken from https://stackoverflow.com/questions/21089959/detecting-collision-of-rectangle-with-circle
+      */
+      const isColliding = (circle, rect) => {
+        
+        vertDist = Math.abs(circle.x-rect.x-rect.w/2);       
+        horizDist = Math.abs(circle.y-rect.y-rect.h/2);
+    
+        pyth = Math.sqrt(vertDist-rect.w/2) + Math.sqrt(horizDist-rect.h/2);
+                    
+        if((vertDist < (rect.w/2)) || (vertDist < (rect.w/2)) ){
+          return true;          
+        }
+        else if(pyth <= Math.sqrt(circle.r)){
+          return true;
+        }
+        else{
+          return false;
+        }
+        
+      }
+      
+      // player movement
+      document.addEventListener("keydown", (e) =>{
+          if(e["key"] == "ArrowDown"){
+            if(player["y"]+10 > c.height-player["h"]){
+              player["y"] = player["y"];
+            }
+            else{
+              player["y"] += 10;
+            }
+          } else if (e["key"] == "ArrowUp"){
+            if(player["y"]-10 < 0 ){
+              player["y"] = player["y"]
+            }
+            else{
+              player["y"] -= 10;
+            }
+          }
+        
+        });
+      
+      var circle1 = {
+        x: c.width,
+        y: Math.floor(Math.random()*c.height),
+        radius: 25,
+        color: "red"
+      }
+      
+      var circle2 = {
+        x: c.width,
+        y: Math.floor(Math.random()*c.height),
+        radius: 25,
+        color: "green"
+      }
+      
+      var objects = [circle1, circle2]
+      
+      
+      
+      
+      const draw = () => {
+
+        //clear
+        ctx.clearRect(0,0,c.width,c.height);
+        
+        
+        
+        //draw
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.rect(player["x"], player["y"], player["w"],player["h"]);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+        
+        for (i in objects){ 
+          let circle = objects[i];
+          circle.x -= 5
+          
+          if(circle.x < circle.radius){
+            circle.y = Math.floor(Math.random()*c.height);
+            circle.x = c.width;
+          }
+          
+          //detect circle with rectangle collision
+          if(isColliding(circle,player) == true){
+            circle.y = Math.floor(Math.random()*c.height);
+            circle.x = c.width;
+            console.log(circle.color);
+          }
+          
+
+          drawFilledCircle(circle.x, circle.y, circle.color, circle.radius);
+        }       
+        
+        
+        //repeat
+        window.requestAnimationFrame(draw);
+      }
+      
+      draw();
+      
+    </script>
+
+  </body>
+
+</html>
