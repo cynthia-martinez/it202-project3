@@ -7,16 +7,25 @@
   </head>
 
   <body>
-    <div id = "game">
-      <canvas id = "c1"></canvas>      
+    <div class = "game">
+      <canvas id = "gameinfo"></canvas>      
+    </div>
+    <div class = "game">
+      <canvas id = "gameplay"></canvas>      
     </div>
     
     <script>
-      var c = document.getElementById("c1");
+      var i = document.getElementById("gameinfo");
+      var infoCtx = i.getContext("2d");
+      infoCtx.canvas.width  = window.innerWidth-100;
+      infoCtx.canvas.height = window.innerHeight/10;
+      
+      var c = document.getElementById("gameplay");
       var ctx = c.getContext("2d");
       ctx.canvas.width  = window.innerWidth-100;
-      ctx.canvas.height = window.innerHeight-20;
-      
+      ctx.canvas.height = window.innerHeight-infoCtx.canvas.height-20;
+      console.log(ctx.canvas.height)
+      console.log(c.height);
       let player  = {x:10, y:c.height/2,w:120,h:50};
       
       let colors = ["red", "green"];
@@ -49,14 +58,14 @@
       // player movement
       document.addEventListener("keydown", (e) =>{
           if(e["key"] == "ArrowDown"){
-            if(player["y"]+10 > c.height-player["h"]){
+            if(player["y"] > c.height-player["h"]){
               player["y"] = player["y"];
             }
             else{
               player["y"] += 10;
             }
           } else if (e["key"] == "ArrowUp"){
-            if(player["y"]-10 < 0 ){
+            if(player["y"] < 0 ){
               player["y"] = player["y"]
             }
             else{
@@ -99,15 +108,23 @@
       
      
       
-      var objects = [rect1, rect2, rect3, rect4]
+      let objects = [rect1, rect2, rect3, rect4]
       
-      
+      let score = 0;
+      let lives = 3;
+      let level = 1;
       
       
       const draw = () => {
 
         //clear
         ctx.clearRect(0,0,c.width,c.height);
+        
+        infoCtx.font = "30px Arial";
+        infoCtx.fillStyle = "white";
+        infoCtx.fillText("Score: " + score,598,50);
+        infoCtx.fillText("Level: " + level,20,50);
+        infoCtx.fillText("Lives: " + lives,1306,50);
         
         
         

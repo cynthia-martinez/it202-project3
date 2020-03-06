@@ -1,9 +1,12 @@
 body{
   overflow: hidden;
 }
-#game{
+div{
   text-align: center;
 }
-#c1{
+#gameplay{
   background-color: #368DC5;
+}
+#gameinfo{
+  background-color: black;
 }
