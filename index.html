@@ -75,40 +75,70 @@
         
         });
       
-      var rect1 = {
+      
+      let penguin = new Image();
+      penguin.src = "https://i.imgur.com/Lyfm4BW.png"
+      
+      let fish = new Image();
+      fish.src = "https://i.imgur.com/7c0T8o2.png"
+      
+      let trash = new Image();
+      trash.src = "https://jnoodle.com/sparechange/wp-content/uploads/2013/10/trash.png"
+      
+      
+      
+      var fishSprite = {
+        image: fish,
+        sx:250,
+        sy:260,
+        sw:30,
+        sh:21,
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        w: 60,
-        h: 40,
-        color: "red"
+        w: fish.naturalWidth*.105,
+        h: fish.naturalHeight*.115,
+        type: "good"
       }
       
-      var rect2= {
+      var fishSprite2 = {
+        image: fish,
+        sx:536,
+        sy:68,
+        sw:32,
+        sh:22,
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        w: 60,
-        h: 40,
-        color: "green"
+        w: fish.naturalWidth*.105,
+        h: fish.naturalHeight*.115,
+        type: "good"
       }
-      var rect3 = {
+      
+      var trashSprite = {
+        image: trash,
+        sx:23,
+        sy:810,
+        sw:424,
+        sh:159,
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        w: 60,
-        h: 40,
-        color: "red"
+        w: trash.naturalWidth*.050,
+        h: trash.naturalHeight*.035,
+        type: "harm"
       }
-      
-      var rect4= {
+     var trashSprite2 = {
+        image: trash,
+        sx:36,
+        sy:1009,
+        sw:462,
+        sh:158,
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        w: 60,
-        h: 40,
-        color: "green"
+        w: trash.naturalWidth*.050,
+        h: trash.naturalHeight*.035,
+        type: "harm"
       }
       
-     
-      
-      let objects = [rect1, rect2, rect3, rect4]
+      let objects = [fishSprite,trashSprite, fishSprite2,trashSprite2]
       
       let score = 0;
       let lives = 3;
@@ -127,48 +157,46 @@
         infoCtx.fillText("Level: " + level,20,50);
         infoCtx.fillText("Lives: " + lives,1306,50);
         
+
+        ctx.drawImage(penguin,345,315,32,16, player.x, player.y, penguin.naturalWidth*.200, penguin.naturalHeight*.150)
+       
         
         
-        //draw
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.rect(player["x"], player["y"], player["w"],player["h"]);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
         
         for (i in objects){ 
-          let rect = objects[i];
+          let sprite = objects[i];
+          console.log(objects);
+          console.log(i);
           if(level == 2){
-            rect.x -= 10;
+            sprite.x -= 5;
           }
           else if(level == 3){
-            rect.x -= 12;
+            sprite.x -= 7;
           }
           else{
-            rect.x -= 5;
+            sprite.x -= 3;
           }
           
-          if(rect.y > c.height-rect.h){
-            rect.y = Math.floor(Math.random()*c.height);
-            rect.x = c.width;
+          if(sprite.y > c.height-sprite.h){
+            sprite.y = Math.floor(Math.random()*c.height);
+            sprite.x = c.width;
           }
           
-          if(isColliding(player,rect) == true){
-            if(rect.color == "red"){
+          if(isColliding(player,sprite) == true){
+            if(sprite.type == "harm"){
               lives--;
             }
-            else if(rect.color == "green"){
+            else if(sprite.type == "good"){
               score++;
             }
-            rect.y = Math.floor(Math.random()*c.height);
-            rect.x = c.width;
+            sprite.y = Math.floor(Math.random()*c.height);
+            sprite.x = c.width;
           }                    
           
           
-          if(rect.x < 0){
-            rect.y = Math.floor(Math.random()*c.height);
-            rect.x = c.width;                                 
+          if(sprite.x < 0){
+            sprite.y = Math.floor(Math.random()*c.height);
+            sprite.x = c.width;                                 
           }
           
           if(score==5){
@@ -181,7 +209,7 @@
           
           
 
-          drawFilledRectangle(rect.x, rect.y, rect.w, rect.h,rect.color);
+          ctx.drawImage(sprite.image,sprite.sx,sprite.sy,sprite.sw,sprite.sh, sprite.x, sprite.y, sprite.w, sprite.h);
         }       
         
         
