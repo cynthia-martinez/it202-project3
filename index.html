@@ -22,11 +22,12 @@
       let colors = ["red", "green"];
       
       
-      const drawFilledCircle = (x,y,color,radius) => {
+      const drawFilledRectangle = (x,y,w,h,color) => {
         ctx.beginPath();
-        ctx.arc(x,y,radius,0, Math.PI*2);
         ctx.fillStyle = color;
+        ctx.rect(x,y,w,h,color);
         ctx.closePath();
+        ctx.stroke();
         ctx.fill();
 
       }
@@ -36,20 +37,10 @@
       */
       const isColliding = (circle, rect) => {
         
-        vertDist = Math.abs(circle.x-rect.x-rect.w/2);       
-        horizDist = Math.abs(circle.y-rect.y-rect.h/2);
-    
-        pyth = Math.sqrt(vertDist-rect.w/2) + Math.sqrt(horizDist-rect.h/2);
-                    
-        if((vertDist < (rect.w/2)) || (vertDist < (rect.w/2)) ){
-          return true;          
-        }
-        else if(pyth <= Math.sqrt(circle.r)){
-          return true;
-        }
-        else{
-          return false;
-        }
+         let deltaX = circle.x - Math.max(rect.x, Math.min(circle.x, rect.x + rect.w));
+        
+         let deltaY = circle.y - Math.max(rect.y, Math.min(circle.y, rect.y + rect.h));
+         return (deltaX * deltaX + deltaY * deltaY) < (circle.r * circle.r);
         
       }
       
@@ -73,21 +64,23 @@
         
         });
       
-      var circle1 = {
+      var rect1 = {
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        radius: 25,
+        w: 60,
+        h: 40,
         color: "red"
       }
       
-      var circle2 = {
+      var rect2= {
         x: c.width,
         y: Math.floor(Math.random()*c.height),
-        radius: 25,
+        w: 60,
+        h: 40,
         color: "green"
       }
       
-      var objects = [circle1, circle2]
+      var objects = [rect1, rect2]
       
       
       
@@ -108,23 +101,16 @@
         ctx.fill();
         
         for (i in objects){ 
-          let circle = objects[i];
-          circle.x -= 5
+          let rect = objects[i];
+          rect.x -= 5
           
-          if(circle.x < circle.radius){
-            circle.y = Math.floor(Math.random()*c.height);
-            circle.x = c.width;
-          }
-          
-          //detect circle with rectangle collision
-          if(isColliding(circle,player) == true){
-            circle.y = Math.floor(Math.random()*c.height);
-            circle.x = c.width;
-            console.log(circle.color);
-          }
+          if(rect.x < rect.w){
+            rect.y = Math.floor(Math.random()*c.height);
+            rect.x = c.width;
+          }                   
           
 
-          drawFilledCircle(circle.x, circle.y, circle.color, circle.radius);
+          drawFilledRectangle(rect.x, rect.y, rect.w, rect.h,rect.color);
         }       
         
         
