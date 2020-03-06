@@ -15,8 +15,8 @@
     </div>
     
     <script>
-      var i = document.getElementById("gameinfo");
-      var infoCtx = i.getContext("2d");
+      var info = document.getElementById("gameinfo");
+      var infoCtx = info.getContext("2d");
       infoCtx.canvas.width  = window.innerWidth-100;
       infoCtx.canvas.height = window.innerHeight/10;
       
@@ -62,14 +62,14 @@
               player["y"] = player["y"];
             }
             else{
-              player["y"] += 10;
+              player["y"] += 15;
             }
           } else if (e["key"] == "ArrowUp"){
             if(player["y"] < 0 ){
               player["y"] = player["y"]
             }
             else{
-              player["y"] -= 10;
+              player["y"] -= 15;
             }
           }
         
@@ -117,8 +117,9 @@
       
       const draw = () => {
 
-        //clear
+        //clear       
         ctx.clearRect(0,0,c.width,c.height);
+        infoCtx.clearRect(0,0,info.width,info.height);
         
         infoCtx.font = "30px Arial";
         infoCtx.fillStyle = "white";
@@ -138,7 +139,15 @@
         
         for (i in objects){ 
           let rect = objects[i];
-          rect.x -= 5
+          if(level == 2){
+            rect.x -= 10;
+          }
+          else if(level == 3){
+            rect.x -= 12;
+          }
+          else{
+            rect.x -= 5;
+          }
           
           if(rect.y > c.height-rect.h){
             rect.y = Math.floor(Math.random()*c.height);
@@ -146,13 +155,27 @@
           }
           
           if(isColliding(player,rect) == true){
+            if(rect.color == "red"){
+              lives--;
+            }
+            else if(rect.color == "green"){
+              score++;
+            }
             rect.y = Math.floor(Math.random()*c.height);
             rect.x = c.width;
-          }
+          }                    
+          
           
           if(rect.x < 0){
             rect.y = Math.floor(Math.random()*c.height);
-            rect.x = c.width;
+            rect.x = c.width;                                 
+          }
+          
+          if(score==5){
+            level=2;
+          }
+          else if(score==10){
+            level=3;
           }
           
           
