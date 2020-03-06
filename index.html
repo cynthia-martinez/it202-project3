@@ -104,7 +104,12 @@
           let rect = objects[i];
           rect.x -= 5
           
-          if(rect.x < rect.w){
+          while(rect.y < rect.h){
+            rect.y = rect.y = Math.floor(Math.random()*c.height);
+          }
+          
+          
+          if(rect.x < 0){
             rect.y = Math.floor(Math.random()*c.height);
             rect.x = c.width;
           }                   
