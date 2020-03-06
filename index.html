@@ -33,14 +33,16 @@
       }
       
       /* takes in a circle object and a rectangle object
-      formulas taken from https://stackoverflow.com/questions/21089959/detecting-collision-of-rectangle-with-circle
+      formulas taken from http://www.jeffreythompson.org/collision-detection/rect-rect.php
       */
-      const isColliding = (circle, rect) => {
-        
-         let deltaX = circle.x - Math.max(rect.x, Math.min(circle.x, rect.x + rect.w));
-        
-         let deltaY = circle.y - Math.max(rect.y, Math.min(circle.y, rect.y + rect.h));
-         return (deltaX * deltaX + deltaY * deltaY) < (circle.r * circle.r);
+      const isColliding = (player, rectObj) => {
+        if (player.x + player.w >= rectObj.x &&     // r1 right edge past r2 left
+            player.x <= rectObj.x + rectObj.w &&       // r1 left edge past r2 right
+            player.y + player.h >= rectObj.y &&       // r1 top edge past r2 bottom
+            player.y <= rectObj.y + rectObj.h) {       // r1 bottom edge past r2 top
+          return true;
+        }
+        return false;
         
       }
       
@@ -79,8 +81,25 @@
         h: 40,
         color: "green"
       }
+      var rect3 = {
+        x: c.width,
+        y: Math.floor(Math.random()*c.height),
+        w: 60,
+        h: 40,
+        color: "red"
+      }
       
-      var objects = [rect1, rect2]
+      var rect4= {
+        x: c.width,
+        y: Math.floor(Math.random()*c.height),
+        w: 60,
+        h: 40,
+        color: "green"
+      }
+      
+     
+      
+      var objects = [rect1, rect2, rect3, rect4]
       
       
       
@@ -104,15 +123,22 @@
           let rect = objects[i];
           rect.x -= 5
           
-          while(rect.y < rect.h){
-            rect.y = rect.y = Math.floor(Math.random()*c.height);
+          if(rect.y > c.height-rect.h){
+            rect.y = Math.floor(Math.random()*c.height);
+            rect.x = c.width;
           }
           
+          if(isColliding(player,rect) == true){
+            rect.y = Math.floor(Math.random()*c.height);
+            rect.x = c.width;
+          }
           
           if(rect.x < 0){
             rect.y = Math.floor(Math.random()*c.height);
             rect.x = c.width;
-          }                   
+          }
+          
+          
           
 
           drawFilledRectangle(rect.x, rect.y, rect.w, rect.h,rect.color);
