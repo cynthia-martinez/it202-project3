@@ -3,10 +3,14 @@
   <head>
     <link rel="stylesheet" type="text/css" href="game.css">
     <meta charset="UTF-8">
-    <title>Dexie</title>    
+    <title>Penguin Game</title>    
   </head>
 
   <body>
+    <audio autoplay loop>
+        <source src="mii.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>  
     <div class = "game">
       <canvas id = "gameinfo"></canvas>      
     </div>
@@ -15,14 +19,15 @@
     </div>
     
     <script>
+   
       var info = document.getElementById("gameinfo");
       var infoCtx = info.getContext("2d");
-      infoCtx.canvas.width  = window.innerWidth-100;
+      infoCtx.canvas.width  = window.innerWidth-300;
       infoCtx.canvas.height = window.innerHeight/10;
       
       var c = document.getElementById("gameplay");
       var ctx = c.getContext("2d");
-      ctx.canvas.width  = window.innerWidth-100;
+      ctx.canvas.width  = window.innerWidth-300;
       ctx.canvas.height = window.innerHeight-infoCtx.canvas.height-20;
       console.log(ctx.canvas.height)
       console.log(c.height);
@@ -75,6 +80,9 @@
         
         });
       
+      
+      let background = new Image();
+      background.src = "https://i.pinimg.com/originals/a4/c4/97/a4c497925d6e2163826907b9e56b267b.png"
       
       let penguin = new Image();
       penguin.src = "https://i.imgur.com/Lyfm4BW.png"
@@ -145,6 +153,50 @@
       let level = 1;
       
       
+      
+      const howTo = () => {
+        
+        //clear       
+        ctx.clearRect(0,0,c.width,c.height);
+        infoCtx.clearRect(0,0,info.width,info.height);
+        
+        infoCtx.font = "50px Arial";
+        infoCtx.fillStyle = "white";
+        infoCtx.fillText("How to Play", 460,50);
+        
+        ctx.font = "40px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("You are playing as a penguin and the objective is to gain points by", 10,50);
+        ctx.fillText("eating only the good fish. The good fish are the red fish. You earn 1", 10,100);
+        ctx.fillText("point. If you eat a bad fish, you lose a life. You have 3 lives.", 10,150);
+        ctx.fillText("If all lives are lost, it's game over. :( ", 10,200);
+        ctx.fillText("Move the penguin by using the up and down arrow key on your", 10, 250);
+        ctx.fillText("keyboard. As you move through the levels, the fish will move", 10,300);
+        ctx.fillText("faster so watch out!", 10,350);
+        ctx.fillText("Have Fun! :)", 10,400);
+        ctx.font = "30px Arial";
+        ctx.fillText("This screen will timeout in 15 seconds and the game will begin.", 10,450);
+        setTimeout(draw, 15000);
+      }
+      
+      
+      const gameOver = () => {
+        
+        //clear       
+        ctx.clearRect(0,0,c.width,c.height);
+        
+        
+        ctx.font = "100px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("GAME", 460,250);
+        ctx.fillText("OVER", 460,350);
+        ctx.font = "60px Arial";
+        ctx.fillText("Reload page to start over.", 285,400);
+
+      }
+        
+        
+      
       const draw = () => {
 
         //clear       
@@ -153,12 +205,14 @@
         
         infoCtx.font = "30px Arial";
         infoCtx.fillStyle = "white";
-        infoCtx.fillText("Score: " + score,598,50);
         infoCtx.fillText("Level: " + level,20,50);
-        infoCtx.fillText("Lives: " + lives,1306,50);
+        infoCtx.fillText("Score: " + score,530,50);
+        infoCtx.fillText("Lives: " + lives,1115,50);
         
-
+        
+        ctx.drawImage(background,0,0,background.naturalWidth*1.45, background.naturalHeight*1.15);
         ctx.drawImage(penguin,345,315,32,16, player.x, player.y, penguin.naturalWidth*.200, penguin.naturalHeight*.150)
+     
        
         
         
@@ -194,6 +248,8 @@
           }                    
           
           
+          
+          
           if(sprite.x < 0){
             sprite.y = Math.floor(Math.random()*c.height);
             sprite.x = c.width;                                 
@@ -214,10 +270,19 @@
         
         
         //repeat
-        window.requestAnimationFrame(draw);
+        if(lives == 0){
+          infoCtx.clearRect(0,0,info.width,info.height);
+          infoCtx.fillText("Level: " + level,20,50);
+          infoCtx.fillText("Score: " + score,530,50);
+          infoCtx.fillText("Lives: " + lives,1115,50);
+          gameOver();
+        }
+        else{
+          window.requestAnimationFrame(draw);
+        }
       }
-      
-      draw();
+
+      howTo();
       
     </script>
 
